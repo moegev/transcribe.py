@@ -47,10 +47,10 @@ def clear_screen():
 def readme(args):
 	if args.readme == True:
 		system = os_detect()
-		clear_screen()
-		script_path, filename, file_extension = fileNames(args.file_path)
+		# clear_screen()
+		script_path, filename, file_extension = fileNames(args)
 		readme = os.path.join(script_path, 'readme.txt')
-		with open('readme.txt', 'r') as infile:
+		with open(readme, 'r') as infile:
 			print(infile.read())
 		exit()
 	else:
@@ -58,13 +58,19 @@ def readme(args):
 
 
 #return all the critical file paths needed to send audio to DG, save the json, retrieve the json
-def fileNames(args_filepath):
+def fileNames(args):
+
 	script_path = os.path.dirname(os.path.realpath(__file__))
 	textDataPath = os.path.join(script_path,'json_outputs')
-	pathname, file_extension = os.path.splitext(args_filepath)
-	filename = pathname[(pathname.rfind("/") + 1):len(pathname)]
-	savename = os.path.join(textDataPath, filename + '.json')
+	if args.file_path is not None:
 
+		pathname, file_extension = os.path.splitext(args.file_path)
+		filename = pathname[(pathname.rfind("/") + 1):len(pathname)]
+		savename = os.path.join(textDataPath, filename + '.json')
+
+	else:
+		filename = "none"
+		file_extension = "none"
 	return script_path, filename, file_extension #this is the audio file extention
 
 #pass hidden or un-hidden API key
@@ -115,7 +121,7 @@ def dg_transcribe(args): #audio, options=list
 			print(f"sending data to api.deepgram.com {audio_path}.wav")
 			r = requests.post('https://api.deepgram.com/v1/listen', headers=headers, data=data)
 			data = json.loads(r.content)
-			saveJson(data, audio_path)
+			saveJson(data, args)
 			return data
 		except:
 			R = requestsParser(r)
@@ -124,8 +130,8 @@ def dg_transcribe(args): #audio, options=list
 			exit()
 
 #since we want to minimize 
-def checkFile(args_filepath):
-	textDataPath, filename, audioFileExtention = fileNames(args_filepath)
+def checkFile(args):
+	textDataPath, filename, audioFileExtention = fileNames(args)
 	jsonFile = os.path.join(textDataPath, 'json_outputs/' + filename + '.json')
 
 	if os.path.isfile(jsonFile):
@@ -136,8 +142,8 @@ def checkFile(args_filepath):
 		message = f"Could not find saved json transcription object {jsonFile}"
 		raise Exception(message)
 
-def saveJson(data, audioFileName=str):
-	textDataPath, filename, audioFileExtention = fileNames(audioFileName)
+def saveJson(data, args):
+	textDataPath, filename, audioFileExtention = fileNames(args)
 	textDataPath = os.path.join(textDataPath,'json_outputs')
 	
 	
@@ -174,7 +180,7 @@ def returnMetaData(jsonFile=dict):
 
 def prettyPrint(args): #jsonFile=dict
 	actions = ['transcript', 'words', 'metadata', 'results']
-	j = checkFile(args.file_path)
+	j = checkFile(args)
 
 	if args.pretty_print not in actions:
 		raise Exception("you did not pass a valid keyword")

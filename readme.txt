@@ -10,13 +10,17 @@ Having written many similar scripts, I decided one hot Berkeley Saturday evening
 
 My own personal goal is to create a simple machine that allows me to answer MORE AND MORE questions about digital speech data and  it's textual representations. 
 
+*------------------------------------------------------------------------*
 Future Functionality (that I have thought about)
+*------------------------------------------------------------------------*
 
-transcribe.py -- (the main script for now) allow ability use ANY of deepgram's speech models incl. diarizers, transliteration
+transcribe.py -- (the main script for now) allow ability use ANY of deepgram's speech models incl. diarizers, transliteration.  Add much more detail to metadata. Make sure it can handle any file Deepgram can handle .mp3, .ogg etc. 
 
 text_stats.py -- tools  learn about some of the important text features of the audio - basic stats: distribution, word count, low accuracy areas, silence time, AAAs, words that don't fit a particular dictionary, etc.
 
 lang_detect.py -- wrapper for DG lang detect, my own personal (high cost) language detector, moe's codeswitching tool. 
+
+audio_wav analzued
 
 Connect with other DG tools, such as WER tools.  Do model comparisons easily.  
 
