@@ -6,6 +6,8 @@ any of deepgrams languages
 save json output
 display transcript or words or metadata or word count or silence amount 
 '''
+
+
 import os
 import argparse
 import json
@@ -94,12 +96,14 @@ def getAPIKey(args):
 			raise ValueError("you need to pass either the 40 character DG api key, \
 				or unix env variable that points to your api key. ")
 # load the local audio file 
-def loadAudio(fileName, filetype=str):
+def loadAudio(args):
+	script_path, filename, file_extension = fileNames(args)
+	print(filename)
 	try:
-		print(f'loading audio{fileName}')
+		print(f'loading audio{filename}{file_extension}')
 		data = None
-		infile = open(fileName, 'rb')
-		return infile
+		infile = open(filename+file_extension, 'rb')
+		return infile, file_extension
 	except:
 		print("Looks like the file you wanted to load does not exist. Check the file path ")
 		raise ValueError("The file path you shared is wrong somehow.")
@@ -115,10 +119,10 @@ def dg_transcribe(args): #audio, options=list
 		try:
 			import requests
 			audio_path = args.file_path
-			data = loadAudio(audio_path)
+			data, file_extension = loadAudio(args)
 
 			headers = {'Authorization': 'Token ' + getAPIKey(args), 'Content-Type': 'audio/wav'}
-			print(f"sending data to api.deepgram.com {audio_path}.wav")
+			print(f"sending data to api.deepgram.com {audio_path}{file_extension}")
 			r = requests.post('https://api.deepgram.com/v1/listen', headers=headers, data=data)
 			data = json.loads(r.content)
 			saveJson(data, args)

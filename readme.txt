@@ -20,7 +20,7 @@ text_stats.py -- tools  learn about some of the important text features of the a
 
 lang_detect.py -- wrapper for DG lang detect, my own personal (high cost) language detector, moe's codeswitching tool. 
 
-audio_wav analzued
+audio_wav analyzed
 
 Connect with other DG tools, such as WER tools.  Do model comparisons easily.  
 
